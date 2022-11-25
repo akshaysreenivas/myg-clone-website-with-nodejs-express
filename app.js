@@ -4,13 +4,15 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
-
 var indexRouter = require('./routes/users');
 var usersRouter = require('./routes/admin');
+const { Store } = require('express-session');
+const filestore=require("session-file-store")(session)
 
 var app = express();
 
 // view engine setup
+app.set('trust proxy', 1)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -19,24 +21,29 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {maxAge:600000 },
+  // store: new filestore()
+}))
 // prevent cache last page
-app.use((req,res,next)=>{
-  res.set("Cache-Control","no-store");
-  next();
-})
+// app.use((req,res,next)=>{
+//   res.set("Cache-Control","no-store");
+//   next();
+// })
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 
 // seccion creator
-app.use(session({
-  secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-  saveUninitialized:true,
-  cookie: { maxAge: 30000 },
-  resave: false 
-}));
+
+
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

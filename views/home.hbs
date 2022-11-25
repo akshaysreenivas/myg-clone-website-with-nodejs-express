@@ -15,8 +15,10 @@
     </form>
   </div>
   <div class="button-div col-md-4 col-12 ">
-    {{#if loggedIn}}
-<div class="btn-group">
+    {{#if user}}
+<div class="d-flex align-items-center">
+  <span>{{user.name}}</span>
+  <div class="btn-group mx-3">
   <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
    
     <i class="bi bi-person-circle"></i>
@@ -30,6 +32,7 @@
     <li><a class="dropdown-item" href="/logout" method="get"><i class="bi bi-box-arrow-right mx-3"></i> logout </a></li>
   
   </ul>
+</div>
 </div>
       
     {{else}}
@@ -65,7 +68,7 @@
   </button>
 </div>
 <i class="bi bi-person-rolodex"></i>
-{{#if loggedIn}}
+{{#if user}}
 <section class="mobiles py-2">
   <div class="container">
     <h1>Mobile Phones</h1>

@@ -1,47 +1,53 @@
 const express = require('express');
 const session = require('express-session');
-const cookie=require("cookie-parser")
 const router = express.Router();
 const app = require('../app');
 const mobile=require('../items/items')
-let loggedIn = false;
+const mobiles=mobile.mobiles;
+
+const filestore=require("session-file-store")(session)
+
 /* GET home page. */
 
 router.get('/', function (req, res, next) {
-const mobiles=mobile.mobiles;
-  res.render('admin', {mobiles,loggedIn});
+
+let user=req.session.user
+
+console.log(user)
+
+  res.render('home', {mobiles,user});
 });
 router.get('/login', function (req, res, next) { 
-  if(loggedIn)
-  res.redirect('/')
-  else
-  res.render('login');
+  if(req.session.user){
+    res.redirect('/');
+   } else{
+    res.render("login")
+    }
 });
 router.post('/login', (req, res, next) => {
-  if(loggedIn)
-  res.redirect('/')
-  else{
-  const password = '123456';
-  const email = 'aws@gmail.com';
+  const data={password:'123456',email:'aws@gmail.com',name:'Akshay'}
+ 
   let newPassword = req.body.userPassword;
   let newEmail = req.body.UserEmail;
-  if (newPassword === password && newEmail === email) {
-    loggedIn = true;
-    res.redirect('/');
-    console.log(req.sessionID)
-    
 
+  if (newPassword === data.password && newEmail === data.email) {
+    req.session.user=data;
+    req.session.islogged=true;
+
+    console.log(req.sessionID)
+    console.log(req.session.user)
+    
+    res.redirect('/');
   } else {
     console.log('login failed')
-    loggedIn = false;
-    loginFail=true;
-    res.render('login',{loginFail})
-
+    res.redirect('/login')
   }
-}
 })
 router.get('/logout',(req, res, next)=>{
-  loggedIn = false;
   res.redirect('/')
 })
+
+
+
+
 module.exports = router;
