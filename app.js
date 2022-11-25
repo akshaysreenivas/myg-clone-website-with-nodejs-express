@@ -1,15 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const session = require('express-session');
-var indexRouter = require('./routes/users');
-var usersRouter = require('./routes/admin');
-const { Store } = require('express-session');
-const filestore=require("session-file-store")(session)
-
-var app = express();
+const indexRouter = require('./routes/users');
+const usersRouter = require('./routes/admin');
+const app = express();
 
 // view engine setup
 app.set('trust proxy', 1)
